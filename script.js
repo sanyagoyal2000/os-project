@@ -461,50 +461,6 @@ function showGanttChart(output, outputDiv) {
     outputDiv.appendChild(ganttChart);
 }
 
-function showTimelineChart(output, outputDiv) {
-    let timelineChartHeading = document.createElement("h3");
-    timelineChartHeading.innerHTML = "Timeline Chart";
-    outputDiv.appendChild(timelineChartHeading);
-    let timelineChartData = [];
-    let startTimeline = 0;
-    output.schedule.forEach((element) => {
-        if (element[0] >= 0) { //process 
-            timelineChartData.push([
-                "P" + element[0],
-                getDate(startTimeline),
-                getDate(startTimeline + element[1])
-            ]);
-        }
-        startTimeline += element[1];
-    });
-    timelineChartData.sort((a, b) => parseInt(a[0].substring(1, a[0].length)) - parseInt(b[0].substring(1, b[0].length)));
-    let timelineChart = document.createElement("div");
-    timelineChart.id = "timeline-chart";
-
-    google.charts.load("current", { packages: ["timeline"] });
-    google.charts.setOnLoadCallback(drawTimelineChart);
-
-    function drawTimelineChart() {
-        var container = document.getElementById("timeline-chart");
-        var chart = new google.visualization.Timeline(container);
-        var dataTable = new google.visualization.DataTable();
-
-        dataTable.addColumn({ type: "string", id: "Process" });
-        dataTable.addColumn({ type: "date", id: "Start" });
-        dataTable.addColumn({ type: "date", id: "End" });
-        dataTable.addRows(timelineChartData);
-
-        let timelineWidth = '100%';
-        if (startTimeline >= 20) {
-            timelineWidth = 0.05 * startTimeline * screen.availWidth;
-        }
-        var options = {
-            width: timelineWidth,
-        };
-        chart.draw(dataTable, options);
-    }
-    outputDiv.appendChild(timelineChart);
-}
 
 function showFinalTable(input, output, outputDiv) {
     let finalTableHeading = document.createElement("h3");
